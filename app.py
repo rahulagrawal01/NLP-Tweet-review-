@@ -4,6 +4,16 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import re
+import nltk
+import nltk
+import re
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import CountVectorizer
+from nltk.stem.porter import PorterStemmer
+
 st.set_option('deprecation.showfileUploaderEncoding', False)
 # Load the pickled model
 model = pickle.load(open('tweetreviewnlp.pkl','rb'))   
@@ -13,11 +23,7 @@ def review(text):
   dataset = pd.read_csv('data.csv',)
   # First step: cleaning Text and removing number and punctuation marks.
   # Cleaning the texts for all review using for loop
-  import re
-  import nltk
   nltk.download('stopwords')
-  from nltk.corpus import stopwords
-  from nltk.stem.porter import PorterStemmer
   corpus = []
   for i in range(0, 1000):
     review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i])
@@ -29,18 +35,14 @@ def review(text):
     #print(review)
     corpus.append(review)
   # Creating the Bag of Words model
-  from sklearn.feature_extraction.text import CountVectorizer
   cv = CountVectorizer(max_features = 1500)
   #print(cv)
   X = cv.fit_transform(corpus).toarray()
-  import re
   review = re.sub('[^a-zA-Z]', ' ', text)
   review=review.lower()
   print(review)
   # Third step: Removing stop words like 'this, the'
-  import nltk
   nltk.download('stopwords')
-  from nltk.corpus import stopwords
   review = review.split()
   print(review)
   # Third step: Removing stop words like 'this, the'
@@ -48,7 +50,6 @@ def review(text):
   review1 = [word for word in review if not word in set(stopwords.words('english'))]
   print(review1)
   # Fourth step: converting stemming words
-  from nltk.stem.porter import PorterStemmer
   ps = PorterStemmer()
   review = [ps.stem(word) for word in review1 if not word in set(stopwords.words('english'))]
   print(review)
